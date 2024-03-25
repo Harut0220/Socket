@@ -1,10 +1,13 @@
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
+import http from "http"
+
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+export const io = new Server(server);
+
 
 app.get('/', (req, res) => {
     res.sendFile('C:\\Users\\DELL\\Desktop\\NewSocket\\index.html', 'utf8');
@@ -12,33 +15,34 @@ app.get('/', (req, res) => {
 
 
 io.on('connection', (socket) => {
-    socket.on('chat message', (msg,user) => {
-        io.emit('chat message', `${user}`);
+    socket.on('user', (user) => {
+        io.emit('user', `User : ${user}`);
       });
 
     
     socket.on('chat message', (msg) => {
-      io.emit('chat message', msg);
+      io.emit('chat message', `message : ${msg}`);
     });
+
   });
 
 
 
 io.on('connection', (socket) => {
     const roomId="fshj6763h"
-    console.log(`${socket.id}# a user connected`);
-    socket.on('disconnect', () => {
-      console.log(`${socket.id}# user disconnected`);
-    });
-
-
+    socket.on("join",(user)=>{
+      socket.join(roomId)
+      console.log(`${user}# a user connected`);
+    })
     
+    socket.on('disconnect', () => {
+      console.log(`${socket.eventNames}# user disconnected`);
+    });   
 });
   
-io.on('connection', (socket) => {
-    console.log(`${socket.id}# a user connected`);
-});
+
   
 server.listen(3000, () => {
   console.log('<http># server running at http://localhost:3000');
 }); 
+
