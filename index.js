@@ -15,18 +15,7 @@ app.get('/', (req, res) => {
 });
 
 
-io.on('connection', (socket) => {
-    socket.on('user', (user) => {
-      console.log(user);
-        io.emit('user', user);
-      });
 
-    
-    socket.on('chat message', (msg) => {
-      io.emit('chat message',msg);
-    });
-
-  });
 
 
 
@@ -36,6 +25,10 @@ io.on('connection', (socket) => {
       socket.join(roomId)
       console.log(`${user}# a user connected`);
     })
+    socket.on('chat message', (userObj,roomId) => {
+      
+      io.emit('chat message',userObj,roomId);
+    });
 
     socket.on('disconnect', () => {
       console.log(`${socket.eventNames}# user disconnected`);
