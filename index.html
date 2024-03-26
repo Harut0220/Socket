@@ -10,7 +10,9 @@
       padding-bottom: 3rem;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-
+    #messages{
+      width: 1000px;
+    }
     #form {
       background: rgba(0, 0, 0, 0.15);
       padding: 0.25rem;
@@ -54,35 +56,42 @@
       border-radius: 15px
     }
 
-    #userName {
-      width: 100px;
-      height: 2px;
-      border-radius: 5px;
-      background-color: grey;
-      font-size: 50px;
-    }
-
-    #messages {
+    .leftMessage{
+      width: 700px;
+      font-size: 35px;
+      right: 0;
+      /* background-color: red; */
+      text-align: right;
+      color: black;
       list-style-type: none;
-      margin: 0;
-      padding: 0;
     }
-    #messages>li{
+    
+    .rightMessage{
+      width: 1000px;
+      /* background-color: black; */
+      font-size: 35px;
+      color: black;
+      left: 0;
+      text-align: left;
+      list-style-type: none;
+    }
+    .itemUserRight{
+      width: 100px;
+      /* background-color: black; */
+      font-size: 20px;
+      text-align: left;
+      color: black;
+      right: 0;
+      list-style-type: none;
+    }
+    .itemUserLeft{
+      width: 700px;
+      /* background-color:red; */
+      text-align: right;
       color: black;
       font-size: 20px;
-      text-align: center;
-    }
- 
-
-    #messages>li:nth-child(odd) {
-      width: 300px;
-      text-align: center;
-      border-radius: 25px;
-      padding-left: 10px;
-      background: #efefef;
-     font-size: 35px;
-     margin-top: 40px;
-     margin-bottom: 20px;
+      right: 0;
+      list-style-type: none;
     }
   </style>
 </head>
@@ -95,48 +104,70 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
-
+    
     const socket = io();
 
     const form = document.getElementById('form');
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
     const user = document.getElementById("user")
-   
+    const userObjRoot={
+          user:"gevor",
+          message:input.value
+         }
 
     form.addEventListener('submit', (e) => {
-
-      const url = new URL('http://localhost:3000/');
-      const params = new URLSearchParams(url.search);
-
-      params.append('user', `${user.value}`);
-
-      url.search = params.toString();
-      console.log(url.href)
+     
       e.preventDefault();
       if (input.value && user.value) {
         socket.emit("join",user.value)
-         socket.emit("user",user.value)
-        socket.emit('chat message', input.value);
+        
+        const userObj={
+          user:user.value,
+          message:input.value
+         }
+
+         socket.emit("user",userObj)
+        
+      
+        socket.emit('chat message', userObj);
         input.value = '';
       }
     });
     
 
-    socket.on('user', (user) => {
+    socket.on('user', (userObj) => {
       const itemUser = document.createElement('li');
-      itemUser.classList="itemUser"
-      itemUser.textContent = user;
+      if(userObj.user===userObjRoot.user){
+        itemUser.classList="itemUserRight"
+      itemUser.textContent =userObj.user;
       messages.appendChild(itemUser);
       window.scrollTo(0, document.body.scrollHeight);
+      }else{
+        itemUser.classList="itemUserLeft"
+      itemUser.textContent =userObj.user;
+      messages.appendChild(itemUser);
+      window.scrollTo(0, document.body.scrollHeight);
+      }
+      
     });
 
-    socket.on('chat message', (msg) => {
+    socket.on('chat message', (userObj) => {
       const itemMessage = document.createElement('li');
-      itemMessage.classList="itemMessage"
-      itemMessage.textContent = msg;
+      console.log(userObj.user===user.value);
+      if (userObj.user===userObjRoot.user) {
+        itemMessage.classList="rightMessage"
+      itemMessage.textContent = userObj.message;
       messages.appendChild(itemMessage);
       window.scrollTo(0, document.body.scrollHeight);
+      }else{
+        itemMessage.classList="leftMessage"
+        itemMessage.textContent = userObj.message;
+      messages.appendChild(itemMessage);
+      window.scrollTo(0, document.body.scrollHeight);
+      }
+      
+      
     });
 
   </script>

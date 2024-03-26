@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import http from "http"
 
 
+
 const app = express();
 const server = createServer(app);
 export const io = new Server(server);
@@ -16,12 +17,13 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
     socket.on('user', (user) => {
-        io.emit('user', `User : ${user}`);
+      console.log(user);
+        io.emit('user', user);
       });
 
     
     socket.on('chat message', (msg) => {
-      io.emit('chat message', `message : ${msg}`);
+      io.emit('chat message',msg);
     });
 
   });
@@ -34,7 +36,7 @@ io.on('connection', (socket) => {
       socket.join(roomId)
       console.log(`${user}# a user connected`);
     })
-    
+
     socket.on('disconnect', () => {
       console.log(`${socket.eventNames}# user disconnected`);
     });   
