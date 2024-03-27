@@ -62,35 +62,69 @@
       border-radius: 15px
     }
 
+    .parent_li{
+      display: flex;
+      flex-direction: column;
+      border: 1px solid red;
+    }
+
+
+
     .leftUserClass {
+      border: 1px solid red;
       /* background-color: red; */
       left: 0;
+      font-size: 12px;
       text-align: left;
+      margin-top: 40px;
+    }
+
+    .leftTime {
+      border: 1px solid red;
+      left: 0;
+      text-align: left;
+      font-size: 10px;
     }
 
     .leftMessage {
-      font-size: 35px;
+      border: 1px solid red;
+      font-size: 25px;
       /* background-color: red; */
       left: 0;
       text-align: left;
     }
 
     .rightUserother {
+      border: 1px solid red;
+      right: 0;
+      /* background-color: blue; */
+      text-align: right;
+      margin-top: 40px;
+      font-size: 12px;
+    }
+
+    .rightMessage {
+      border: 1px solid red;
+      font-size: 25px;
       right: 0;
       /* background-color: blue; */
       text-align: right;
     }
 
-    .rightMessage {
-      font-size: 35px;
-      right: 0;
+    .rightTime {
+      justify-content: end;
+      /* width: 200px; */
+      border: 1px solid red;
+      margin-left: 0;
       /* background-color: blue; */
       text-align: right;
+      font-size: 10px;
     }
   </style>
 </head>
 
 <body>
+  <div id="div"></div>
   <ul id="messages"></ul>
   <form id="form" action="">
     <input id="input" autocomplete="off" /><input type="text" id="user"><button>Send</button>
@@ -105,67 +139,117 @@
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
     const user = document.getElementById("user")
+
     const userObjRoot = {
       user: "gevor",
       message: input.value
     }
-
+    socket.emit("join", user.value, userObjRoot.user)
+    // socket.emit("disconnect",userObjRoot.user)
     form.addEventListener('submit', (e) => {
 
       e.preventDefault();
       if (input.value && user.value) {
-        socket.emit("join", user.value)
+
 
         const userObj = {
           user: user.value,
           message: input.value
         }
 
-
-
-
         socket.emit('chat message', userObj);
         input.value = '';
       }
     });
 
+    socket.on("join", (dataAll, user, loginUser) => {
+      
+      
+      dataAll.map((message) => {
+
+        const itemMessage = document.createElement('li');
+
+        if (message.user===loginUser) {
+          itemMessage.style.justifyContent="end"
+          const itemUser = document.createElement('li')
+          const timeRow = document.createElement("li")
+          timeRow.classList = "leftTime"
+          timeRow.textContent = message.time
+          itemUser.classList = "leftUserClass"
+          itemUser.textContent = message.user
+          itemMessage.classList = "leftMessage"
+          itemMessage.textContent = message.message;
+          messages.appendChild(itemUser)
+          messages.appendChild(itemMessage);
+          messages.appendChild(timeRow)
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          itemMessage.style.justifyContent="start"
+          const itemUser = document.createElement('li')
+          const timeRow = document.createElement("li")
+          timeRow.classList = "rightTime"
+          timeRow.textContent = message.time
+          itemUser.classList = "rightUserother"
+          itemUser.textContent = message.user
+          itemMessage.classList = "rightMessage"
+          itemMessage.textContent =message.message;
+          messages.appendChild(itemUser)
+          messages.appendChild(itemMessage);
+          messages.appendChild(timeRow)
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      })
 
 
+    })
 
-    socket.on('chat message', (userObj, roomId) => {
+
+    socket.on('chat message', async (userObj, roomId, dbMessages) => {
+
+
 
       const itemMessage = document.createElement('li');
-      const now = new Date();
-      const hours = now.getHours();
-      const day=now.getDay();
-      const minutes = now.getMinutes();
-      const seconds = now.getSeconds();
-      console.log(day);
-      console.log(`Current time is ${hours}:${minutes}:${seconds}`);
-
-
+      itemMessage.classList="parent_li"
       if (userObj.user === userObjRoot.user) {
         const itemUser = document.createElement('li')
+        const timeRow = document.createElement("li")
+        timeRow.classList = "leftTime"
+        timeRow.textContent = dbMessages[dbMessages.length - 1].time +"  show"
         itemUser.classList = "leftUserClass"
-        itemUser.textContent = userObjRoot.user
+        itemUser.textContent = dbMessages[dbMessages.length - 1].user
         itemMessage.classList = "leftMessage"
-        itemMessage.textContent = userObj.message;
+        itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
         messages.appendChild(itemUser)
         messages.appendChild(itemMessage);
+        messages.appendChild(timeRow)
         window.scrollTo(0, document.body.scrollHeight);
       } else {
         const itemUser = document.createElement('li')
+        const timeRow = document.createElement("li")
+        timeRow.classList = "rightTime"
+        timeRow.textContent = dbMessages[dbMessages.length - 1].time 
         itemUser.classList = "rightUserother"
-        itemUser.textContent = userObj.user
+        itemUser.textContent = dbMessages[dbMessages.length - 1].user
         itemMessage.classList = "rightMessage"
-        itemMessage.textContent = userObj.message;
+        itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
         messages.appendChild(itemUser)
         messages.appendChild(itemMessage);
+        messages.appendChild(timeRow)
         window.scrollTo(0, document.body.scrollHeight);
       }
 
-
     });
+
+    // socket.on("disconnect",(user,dbAll)=>{
+    //   dbAll.map((message)=>{
+    //     if(user===userObjRoot.user){
+
+    //   }
+    //   })
+      
+    // })
+
+
 
   </script>
 </body>
