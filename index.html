@@ -6,6 +6,7 @@
   <title>Socket.IO chat</title>
   <style>
     body {
+      overflow-x: hidden;
       margin: 0;
       padding-bottom: 3rem;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -16,7 +17,8 @@
     }
 
     #messages {
-      width: 800px;
+      width: 650px;
+      margin-bottom: 0;
     }
 
     #form {
@@ -24,10 +26,9 @@
       padding: 0.25rem;
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
+      width: 700px;
+      margin-left: 0;
       display: flex;
-      height: 3rem;
       box-sizing: border-box;
       backdrop-filter: blur(10px);
     }
@@ -38,6 +39,7 @@
       flex-grow: 1;
       border-radius: 2rem;
       margin: 0.25rem;
+      height: 30px;
     }
 
     #input:focus {
@@ -52,6 +54,7 @@
       border-radius: 3px;
       outline: none;
       color: #fff;
+      height: 30px;
     }
 
     #form>#user {
@@ -60,19 +63,17 @@
       padding: 0 1rem;
       margin: 0.25rem;
       border-radius: 15px
+    
     }
 
     .parent_li{
       display: flex;
       flex-direction: column;
-      border: 1px solid red;
     }
 
 
 
     .leftUserClass {
-      border: 1px solid red;
-      /* background-color: red; */
       left: 0;
       font-size: 12px;
       text-align: left;
@@ -80,55 +81,109 @@
     }
 
     .leftTime {
-      border: 1px solid red;
+
       left: 0;
       text-align: left;
       font-size: 10px;
     }
 
     .leftMessage {
-      border: 1px solid red;
       font-size: 25px;
-      /* background-color: red; */
       left: 0;
       text-align: left;
     }
 
     .rightUserother {
-      border: 1px solid red;
-      right: 0;
-      /* background-color: blue; */
+      right: 25px;
       text-align: right;
       margin-top: 40px;
       font-size: 12px;
     }
 
     .rightMessage {
-      border: 1px solid red;
       font-size: 25px;
-      right: 0;
-      /* background-color: blue; */
+      right: 15px;
       text-align: right;
     }
 
     .rightTime {
       justify-content: end;
-      /* width: 200px; */
-      border: 1px solid red;
-      margin-left: 0;
-      /* background-color: blue; */
+      margin-left: 15px;
       text-align: right;
       font-size: 10px;
+    }
+    .scrollable-div{
+      background-color: aliceblue;
+      border-radius: 20px;
+      display: none;
+      padding-right: 25px;
+      overflow-y: scroll;
+      scroll-margin-inline-end: 100px;
+      position: absolute;
+      top: 50px;
+      bottom: 0;
+      right: 0;
+      width: 700px;
+      margin-right: -15px;
+      margin-bottom: 50px;
+      
+     
+    }
+    #click{
+      display: flex;
+      position: absolute;
+      width: 50px;
+      height: 45px;
+      background-color: #333;
+      margin: 10px;
+     bottom: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+    }
+    #x-{
+      margin-left: 5px;
+      border-top-left-radius:20px ;
+      display: flex;
+      width: 80px;
+      height: 25px;
+      position: fixed;
+    }
+    #x{
+      border-radius:20px ;
+      border: none;
+      text-align: center;
+      width: 50px;
+      height: 25px;
+      background-color: aqua;
+    }
+    #hidden{
+      background-color: aqua;
+      border-radius:20px ;
+      border: none;
+      text-align: center;
+      width: 50px;
+      height: 25px;
     }
   </style>
 </head>
 
-<body>
-  <div id="div"></div>
-  <ul id="messages"></ul>
+<body id="body">
+  <div id="click" onclick="clickFuncShow()">chat</div>
+  <div id="show" class="scrollable-div">
+    <div id="x-">
+      <div id="x">x</div>
+      <div id="hidden" onclick="clickHidden()">-</div>
+    </div>
+    <ul id="messages"></ul>
   <form id="form" action="">
-    <input id="input" autocomplete="off" /><input type="text" id="user"><button>Send</button>
+    <input id="input" autocomplete="off" /><button>Send</button>
   </form>
+  </div>
+  
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
@@ -139,21 +194,96 @@
     const input = document.getElementById('input');
     const messages = document.getElementById('messages');
     const user = document.getElementById("user")
-
-    const userObjRoot = {
-      user: "gevor",
-      message: input.value
+    const bodyClick=document.getElementById("body")
+    const divShow=document.getElementById("show")
+    const hiddenClick=document.getElementById("hidden")
+    const clickChat=document.getElementById("click")
+    scrollToBottom()
+    function scrollToBottom() {
+      divShow.scrollTop = divShow.scrollHeight;
+        }
+    const clickHidden=()=>{
+      scrollToBottom()
+      divShow.style.display="none"
+      clickChat.style.display="flex"
     }
-    socket.emit("join", user.value, userObjRoot.user)
-    // socket.emit("disconnect",userObjRoot.user)
-    form.addEventListener('submit', (e) => {
+    // hiddenClick.addEventListener("click",()=>{
+    //   divShow.style.display="none"
+    //   clickChat.style.display="flex"
+    // }) 
+     
+    const clickFuncShow=()=>{
+      scrollToBottom()
 
+      socket.emit("join", )
+    
+      clickChat.style.display="none"
+       divShow.style.display="flex"
+       divShow.style.overflow="scroll"
+      //  divShow.scrollTo({ 
+      //    top: divShow.clientHeight / 0, 
+      //    left: divShow.clientWidth / 0, 
+      //    behavior: "smooth"
+      //  })
+      //  window.scrollTo(100,document.divShow.innerHeight)
+    }
+
+    
+     
+    socket.on("join", (dataAll,id) => {
+      messages.innerHTML=""
+dataAll.map((message) => {
+console.log("id",id)
+console.log("databaseUser",message.user);
+
+ const itemMessage = document.createElement('li');
+ 
+ if (message.user===id) {
+  
+  itemMessage.style.justifyContent="start"
+   const itemUser = document.createElement('li')
+   const timeRow = document.createElement("li")
+   timeRow.classList = "rightTime"
+   timeRow.textContent = message.time
+   itemUser.classList = "rightUserother"
+   itemUser.textContent = message.user
+   itemMessage.classList = "rightMessage"
+   itemMessage.textContent =message.message;
+   messages.appendChild(itemUser)
+   messages.appendChild(itemMessage);
+   messages.appendChild(timeRow)
+  //  window.scrollTo(0, document.body.scrollHeight);
+ } else {
+ 
+  itemMessage.style.justifyContent="end"
+   const itemUser = document.createElement('li')
+   const timeRow = document.createElement("li")
+   timeRow.classList = "leftTime"
+   timeRow.textContent = message.time+"show"
+   itemUser.classList = "leftUserClass"
+   itemUser.textContent = message.user
+   itemMessage.classList = "leftMessage"
+   itemMessage.textContent = message.message;
+   messages.appendChild(itemUser)
+   messages.appendChild(itemMessage);
+   messages.appendChild(timeRow)
+  //  window.scrollTo(0, document.body.scrollHeight); 
+ }
+})
+
+
+})
+  
+   
+   
+ 
+    form.addEventListener('submit', (e) => {
+      
       e.preventDefault();
-      if (input.value && user.value) {
+      if (input.value) {
 
 
         const userObj = {
-          user: user.value,
           message: input.value
         }
 
@@ -162,83 +292,51 @@
       }
     });
 
-    socket.on("join", (dataAll, user, loginUser) => {
-      
-      
-      dataAll.map((message) => {
-
-        const itemMessage = document.createElement('li');
-
-        if (message.user===loginUser) {
-          itemMessage.style.justifyContent="end"
-          const itemUser = document.createElement('li')
-          const timeRow = document.createElement("li")
-          timeRow.classList = "leftTime"
-          timeRow.textContent = message.time
-          itemUser.classList = "leftUserClass"
-          itemUser.textContent = message.user
-          itemMessage.classList = "leftMessage"
-          itemMessage.textContent = message.message;
-          messages.appendChild(itemUser)
-          messages.appendChild(itemMessage);
-          messages.appendChild(timeRow)
-          window.scrollTo(0, document.body.scrollHeight);
-        } else {
-          itemMessage.style.justifyContent="start"
-          const itemUser = document.createElement('li')
-          const timeRow = document.createElement("li")
-          timeRow.classList = "rightTime"
-          timeRow.textContent = message.time
-          itemUser.classList = "rightUserother"
-          itemUser.textContent = message.user
-          itemMessage.classList = "rightMessage"
-          itemMessage.textContent =message.message;
-          messages.appendChild(itemUser)
-          messages.appendChild(itemMessage);
-          messages.appendChild(timeRow)
-          window.scrollTo(0, document.body.scrollHeight);
-        }
-      })
-
-
-    })
-
-
-    socket.on('chat message', async (userObj, roomId, dbMessages) => {
 
 
 
-      const itemMessage = document.createElement('li');
-      itemMessage.classList="parent_li"
-      if (userObj.user === userObjRoot.user) {
-        const itemUser = document.createElement('li')
-        const timeRow = document.createElement("li")
-        timeRow.classList = "leftTime"
-        timeRow.textContent = dbMessages[dbMessages.length - 1].time +"  show"
-        itemUser.classList = "leftUserClass"
-        itemUser.textContent = dbMessages[dbMessages.length - 1].user
-        itemMessage.classList = "leftMessage"
-        itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
-        messages.appendChild(itemUser)
-        messages.appendChild(itemMessage);
-        messages.appendChild(timeRow)
-        window.scrollTo(0, document.body.scrollHeight);
-      } else {
-        const itemUser = document.createElement('li')
-        const timeRow = document.createElement("li")
-        timeRow.classList = "rightTime"
-        timeRow.textContent = dbMessages[dbMessages.length - 1].time 
-        itemUser.classList = "rightUserother"
-        itemUser.textContent = dbMessages[dbMessages.length - 1].user
-        itemMessage.classList = "rightMessage"
-        itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
-        messages.appendChild(itemUser)
-        messages.appendChild(itemMessage);
-        messages.appendChild(timeRow)
-        window.scrollTo(0, document.body.scrollHeight);
-      }
+socket.on('chat message', async (dbMessages,userid) => {
+const itemMessage = document.createElement('li');
+console.log("userid",userid);
+console.log("dbMessages[dbMessages.length - 1].user",dbMessages[dbMessages.length - 1].user);
+itemMessage.classList="parent_li"
 
-    });
+ if (dbMessages[dbMessages.length - 1].user === userid) {
+ const itemUser = document.createElement('li')
+ const timeRow = document.createElement("li")
+ timeRow.classList = "leftTime"
+ timeRow.textContent = dbMessages[dbMessages.length - 1].time +"  show"
+ itemUser.classList = "leftUserClass"
+ itemUser.textContent = dbMessages[dbMessages.length - 1].user
+ itemMessage.classList = "leftMessage"
+ itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
+ messages.appendChild(itemUser)
+ messages.appendChild(itemMessage);
+ messages.appendChild(timeRow)
+ scrollToBottom()
+ window.scrollTo(0, document.body.scrollHeight);
+} else {
+ const itemUser = document.createElement('li')
+ const timeRow = document.createElement("li")
+ timeRow.classList = "rightTime"
+ timeRow.textContent = dbMessages[dbMessages.length - 1].time 
+ itemUser.classList = "rightUserother"
+ itemUser.textContent = dbMessages[dbMessages.length - 1].user
+ itemMessage.classList = "rightMessage"
+ itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
+ messages.appendChild(itemUser)
+ messages.appendChild(itemMessage);
+ messages.appendChild(timeRow)
+ scrollToBottom()
+ window.scrollTo(0, document.body.scrollHeight);
+}
+
+// itemMessage.innerHTML=" "
+
+
+});
+
+  
 
     // socket.on("disconnect",(user,dbAll)=>{
     //   dbAll.map((message)=>{
@@ -248,7 +346,6 @@
     //   })
       
     // })
-
 
 
   </script>

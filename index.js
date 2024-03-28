@@ -41,9 +41,9 @@ app.get('/', (req, res) => {
 
 
 io.on("connection",(socket)=>{
-  socket.on("join",async (user,loginUser)=>{
+  socket.on("join",async ()=>{
     const dbAll=await MessageModel.find()
-    io.emit("join",dbAll,user,loginUser)
+    io.emit("join",dbAll,socket.id)
   })
 })
 
@@ -67,8 +67,8 @@ io.on('connection',async (socket) => {
       const resultTime = hours + ":" + minutes + ":" + seconds
 
       const objDb={
-        roomId,
-        user : userObj.user,
+        // roomId,
+        user : socket.id,
         message:userObj.message,
         date:resultDate,
         time:resultTime
@@ -77,31 +77,13 @@ io.on('connection',async (socket) => {
       const seededItems = await MessageModel.insertMany(objDb);
       const dbMessages=await MessageModel.find()
    
-      io.emit('chat message',userObj,roomId,dbMessages);
+      io.emit('chat message',dbMessages,socket.id);
       
     });
-
-      
-    
+   
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
 server.listen(process.env.PORT, () => {
   console.log('<http># server running at http://localhost:3000');
 }); 
