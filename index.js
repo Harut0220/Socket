@@ -38,9 +38,9 @@ export const io = new Server(server);
 // span.textContent="aaaaaa"
 // dat.appendChild(span)
 
-app.get("/", (req, res) => {
-  res.sendFile("C:\\Users\\DELL\\Desktop\\NewSocket\\index.html", "utf8");
-});
+// app.get("/", (req, res) => {
+//   res.sendFile("C:\\Users\\DELL\\Desktop\\NewSocket\\index.html", "utf8");
+// });
 
 io.on("connection", (socket) => {
   socket.on("join", async () => {
