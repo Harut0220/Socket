@@ -19,6 +19,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 config()
+app.use(cors());
 app.set("view engine", "ejs");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
