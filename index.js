@@ -10,6 +10,9 @@ import cors from "cors";
 // index.js
 
 import jsdom from 'jsdom';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import viewsRouter from './Router/SocketRouter.js';
 const { JSDOM } = jsdom;
 const { window } = new JSDOM();
 const document = window.document;
@@ -23,6 +26,14 @@ const dotenv = configDotenv();
 const conn= connection()
 app.use(cors());
 
+
+app.set("view engine", "ejs");
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.set("views", path.join(__dirname, "Views"));
+app.use(express.static(path.join(__dirname, "Public")));
+app.use("/",viewsRouter)
 const server = createServer(app);
 export const io = new Server(server);
 
@@ -65,10 +76,10 @@ io.on('connection',async (socket) => {
       const formattedDay = dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth;
       const resultDate = formattedMonth + "." + formattedDay + "." + year
       const resultTime = hours + ":" + minutes + ":" + seconds
-
+      const user=socket.id
       const objDb={
         // roomId,
-        user : socket.id,
+        user : user,
         message:userObj.message,
         date:resultDate,
         time:resultTime
@@ -77,7 +88,7 @@ io.on('connection',async (socket) => {
       const seededItems = await MessageModel.insertMany(objDb);
       const dbMessages=await MessageModel.find()
    
-      io.emit('chat message',dbMessages,socket.id);
+      io.emit('chat message',dbMessages,user);
       
     });
    
