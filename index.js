@@ -29,6 +29,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.set("views", path.join(__dirname, "Views"));
 app.use(express.static(path.join(__dirname, "Public")));
 app.use("/", viewsRouter);
+
 app.use((req, res, next) => {
   console.log(`Incoming ${req.method} request to ${req.url}`);
   next(); // Call next middleware
@@ -87,5 +88,5 @@ io.on("connection", async (socket) => {
 });
 
 server.listen(process.env.PORT, () => {
-  console.log("<http># server running at http://localhost:3000");
+  console.log(`<http># server running at http://localhost:${process.env.PORT}`);
 });
