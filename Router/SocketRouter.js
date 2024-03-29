@@ -7,3 +7,4 @@ viewsRouter.get("/", (req, res) => {
 });
 
 export default viewsRouter;
+
