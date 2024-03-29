@@ -1,341 +1,311 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Socket.IO chat</title>
-  <style>
-    body {
-      overflow-x: hidden;
-      margin: 0;
-      padding-bottom: 3rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    #messages>li {
-      list-style-type: none;
-    }
-
-    #messages {
-      width: 650px;
-      margin-bottom: 0;
-    }
-
-    #form {
-      background: rgba(0, 0, 0, 0.15);
-      padding: 0.25rem;
-      position: fixed;
-      bottom: 0;
-      width: 700px;
-      margin-left: 0;
-      display: flex;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    }
-
-    #input {
-      border: none;
-      padding: 0 1rem;
-      flex-grow: 1;
-      border-radius: 2rem;
-      margin: 0.25rem;
-      height: 30px;
-    }
-
-    #input:focus {
-      outline: none;
-    }
-
-    #form>button {
-      background: #333;
-      border: none;
-      padding: 0 1rem;
-      margin: 0.25rem;
-      border-radius: 3px;
-      outline: none;
-      color: #fff;
-      height: 30px;
-    }
-
-    #form>#user {
-      width: 100px;
-      border: none;
-      padding: 0 1rem;
-      margin: 0.25rem;
-      border-radius: 15px
-    
-    }
-
-    .parent_li{
-      display: flex;
-      flex-direction: column;
-    }
-
-
-
-    .leftUserClass {
-      left: 0;
-      font-size: 12px;
-      text-align: left;
-      margin-top: 40px;
-    }
-
-    .leftTime {
-
-      left: 0;
-      text-align: left;
-      font-size: 10px;
-    }
-
-    .leftMessage {
-      font-size: 25px;
-      left: 0;
-      text-align: left;
-    }
-
-    .rightUserother {
-      right: 25px;
-      text-align: right;
-      margin-top: 40px;
-      font-size: 12px;
-    }
-
-    .rightMessage {
-      font-size: 25px;
-      right: 15px;
-      text-align: right;
-    }
-
-    .rightTime {
-      justify-content: end;
-      margin-left: 15px;
-      text-align: right;
-      font-size: 10px;
-    }
-    .scrollable-div{
-      background-color: aliceblue;
-      border-radius: 20px;
-      display: none;
-      padding-right: 25px;
-      overflow-y: scroll;
-      scroll-margin-inline-end: 100px;
-      position: absolute;
-      top: 50px;
-      bottom: 0;
-      right: 0;
-      width: 700px;
-      margin-right: -15px;
-      margin-bottom: 50px;
-      
-     
-    }
-    #click{
-      display: flex;
-      position: absolute;
-      width: 50px;
-      height: 45px;
-      background-color: #333;
-      margin: 10px;
-     bottom: 0;
-      right: 0;
-      text-align: center;
-      color: white;
-      justify-content: center;
-      align-items: center;
-      border-radius: 20px;
-    }
-    #x-{
-      margin-left: 5px;
-      border-top-left-radius:20px ;
-      display: flex;
-      width: 80px;
-      height: 25px;
-      position: fixed;
-    }
-    #x{
-      border-radius:20px ;
-      border: none;
-      text-align: center;
-      width: 50px;
-      height: 25px;
-      background-color: aqua;
-    }
-    #hidden{
-      background-color: aqua;
-      border-radius:20px ;
-      border: none;
-      text-align: center;
-      width: 50px;
-      height: 25px;
-    }
-  </style>
-</head>
-
-<body id="body">
-  <div id="click" onclick="clickFuncShow()">chat</div>
-  <div id="show" class="scrollable-div">
-    <div id="x-">
-      <div id="x">x</div>
-      <div id="hidden" onclick="clickHidden()">-</div>
-    </div>
-    <ul id="messages"></ul>
-  <form id="form" action="">
-    <input id="input" autocomplete="off" /><button>Send</button>
-  </form>
-  </div>
-  
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-
-
-    const socket = io();
-
-    const form = document.getElementById('form');
-    const input = document.getElementById('input');
-    const messages = document.getElementById('messages');
-    const user = document.getElementById("user")
-    const bodyClick=document.getElementById("body")
-    const divShow=document.getElementById("show")
-    const hiddenClick=document.getElementById("hidden")
-    const clickChat=document.getElementById("click")
-    scrollToBottom()
-    function scrollToBottom() {
-      divShow.scrollTop = divShow.scrollHeight;
-        }
-    const clickHidden=()=>{
-      scrollToBottom()
-      divShow.style.display="none"
-      clickChat.style.display="flex"
-    }
-     
-    const clickFuncShow=()=>{
-      scrollToBottom()
-
-      socket.emit("join", )
-    
-      clickChat.style.display="none"
-       divShow.style.display="flex"
-       divShow.style.overflow="scroll"
-    }
-
-    
-     
-    socket.on("join", (dataAll,id) => {
-      messages.innerHTML=""
-dataAll.map((message) => {
-console.log("id",id)
-console.log("databaseUser",message.user);
-
- const itemMessage = document.createElement('li');
- 
- if (message.user===id) {
-  
-  itemMessage.style.justifyContent="start"
-   const itemUser = document.createElement('li')
-   const timeRow = document.createElement("li")
-   timeRow.classList = "rightTime"
-   timeRow.textContent = message.time+"show"
-   itemUser.classList = "rightUserother"
-   itemUser.textContent = message.user
-   itemMessage.classList = "rightMessage"
-   itemMessage.textContent =message.message;
-   messages.appendChild(itemUser)
-   messages.appendChild(itemMessage);
-   messages.appendChild(timeRow)
- } else {
- 
-  itemMessage.style.justifyContent="end"
-   const itemUser = document.createElement('li')
-   const timeRow = document.createElement("li")
-   timeRow.classList = "leftTime"
-   timeRow.textContent = message.time
-   itemUser.classList = "leftUserClass"
-   itemUser.textContent = message.user
-   itemMessage.classList = "leftMessage"
-   itemMessage.textContent = message.message;
-   messages.appendChild(itemUser)
-   messages.appendChild(itemMessage);
-   messages.appendChild(timeRow)
-
- }
- scrollToBottom()
-})
-
-
-})
-  
-   
-   
- 
-    form.addEventListener('submit', (e) => {
-      
-      e.preventDefault();
-      if (input.value) {
-
-
-        const userObj = {
-          message: input.value
-        }
-
-        socket.emit('chat message', userObj);
-        input.value = '';
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Socket.IO chat</title>
+    <style>
+      body {
+        overflow-x: hidden;
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
       }
-    });
 
+      #messages > li {
+        list-style-type: none;
+      }
 
+      #messages {
+        width: 650px;
+        margin-bottom: 0;
+      }
 
+      #form {
+        background: rgba(0, 0, 0, 0.15);
+        padding: 0.25rem;
+        position: fixed;
+        bottom: 0;
+        width: 700px;
+        margin-left: 0;
+        display: flex;
+        box-sizing: border-box;
+        backdrop-filter: blur(10px);
+      }
 
-socket.on('chat message', async (dbMessages,userid) => {
-const itemMessage = document.createElement('li');
+      #input {
+        border: none;
+        padding: 0 1rem;
+        flex-grow: 1;
+        border-radius: 2rem;
+        margin: 0.25rem;
+        height: 30px;
+      }
 
-itemMessage.classList="parent_li"
+      #input:focus {
+        outline: none;
+      }
 
- if (!dbMessages[dbMessages.length - 1].user === userid) {
- const itemUser = document.createElement('li')
- const timeRow = document.createElement("li")
- timeRow.classList = "leftTime"
- timeRow.textContent = dbMessages[dbMessages.length - 1].time +"  show"
- itemUser.classList = "leftUserClass"
- itemUser.textContent = dbMessages[dbMessages.length - 1].user
- itemMessage.classList = "leftMessage"
- itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
- messages.appendChild(itemUser)
- messages.appendChild(itemMessage);
- messages.appendChild(timeRow)
- scrollToBottom()
- window.scrollTo(0, document.body.scrollHeight);
-} else {
- const itemUser = document.createElement('li')
- const timeRow = document.createElement("li")
- timeRow.classList = "rightTime"
- timeRow.textContent = dbMessages[dbMessages.length - 1].time 
- itemUser.classList = "rightUserother"
- itemUser.textContent = dbMessages[dbMessages.length - 1].user
- itemMessage.classList = "rightMessage"
- itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
- messages.appendChild(itemUser)
- messages.appendChild(itemMessage);
- messages.appendChild(timeRow)
- scrollToBottom()
- window.scrollTo(0, document.body.scrollHeight);
-}
+      #form > button {
+        background: #333;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 3px;
+        outline: none;
+        color: #fff;
+        height: 30px;
+      }
 
+      #form > #user {
+        width: 100px;
+        border: none;
+        padding: 0 1rem;
+        margin: 0.25rem;
+        border-radius: 15px;
+      }
 
-});
+      .parent_li {
+        display: flex;
+        flex-direction: column;
+      }
 
-  
+      .leftUserClass {
+        left: 0;
+        font-size: 12px;
+        text-align: left;
+        margin-top: 40px;
+      }
 
-    // socket.on("disconnect",(user,dbAll)=>{
-    //   dbAll.map((message)=>{
-    //     if(user===userObjRoot.user){
+      .leftTime {
+        left: 0;
+        text-align: left;
+        font-size: 10px;
+      }
 
-    //   }
-    //   })
-      
-    // })
+      .leftMessage {
+        font-size: 25px;
+        left: 0;
+        text-align: left;
+      }
 
+      .rightUserother {
+        right: 25px;
+        text-align: right;
+        margin-top: 40px;
+        font-size: 12px;
+      }
 
-  </script>
-</body>
+      .rightMessage {
+        font-size: 25px;
+        right: 15px;
+        text-align: right;
+      }
 
+      .rightTime {
+        justify-content: end;
+        margin-left: 15px;
+        text-align: right;
+        font-size: 10px;
+      }
+      .scrollable-div {
+        background-color: aliceblue;
+        border-radius: 20px;
+        display: none;
+        padding-right: 25px;
+        overflow-y: scroll;
+        scroll-margin-inline-end: 100px;
+        position: absolute;
+        top: 50px;
+        bottom: 0;
+        right: 0;
+        width: 700px;
+        margin-right: -15px;
+        margin-bottom: 50px;
+      }
+      #click {
+        display: flex;
+        position: absolute;
+        width: 50px;
+        height: 45px;
+        background-color: #333;
+        margin: 10px;
+        bottom: 0;
+        right: 0;
+        text-align: center;
+        color: white;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
+      }
+      #x- {
+        margin-left: 5px;
+        border-top-left-radius: 20px;
+        display: flex;
+        width: 80px;
+        height: 25px;
+        position: fixed;
+      }
+      #x {
+        border-radius: 20px;
+        border: none;
+        text-align: center;
+        width: 50px;
+        height: 25px;
+        background-color: aqua;
+      }
+      #hidden {
+        background-color: aqua;
+        border-radius: 20px;
+        border: none;
+        text-align: center;
+        width: 50px;
+        height: 25px;
+      }
+    </style>
+  </head>
+
+  <body id="body">
+    <div id="click" onclick="clickFuncShow()">chat</div>
+    <div id="show" class="scrollable-div">
+      <div id="x-">
+        <div id="x">x</div>
+        <div id="hidden" onclick="clickHidden()">-</div>
+      </div>
+      <ul id="messages"></ul>
+      <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const messages = document.getElementById("messages");
+      const user = document.getElementById("user");
+      const bodyClick = document.getElementById("body");
+      const divShow = document.getElementById("show");
+      const hiddenClick = document.getElementById("hidden");
+      const clickChat = document.getElementById("click");
+      scrollToBottom();
+      function scrollToBottom() {
+        divShow.scrollTop = divShow.scrollHeight;
+      }
+      const clickHidden = () => {
+        scrollToBottom();
+        divShow.style.display = "none";
+        clickChat.style.display = "flex";
+      };
+
+      const clickFuncShow = () => {
+        scrollToBottom();
+
+        socket.emit("join");
+
+        clickChat.style.display = "none";
+        divShow.style.display = "flex";
+        divShow.style.overflow = "scroll";
+      };
+
+      socket.on("join", (dataAll, id) => {
+        messages.innerHTML = "";
+        dataAll.map((message) => {
+          console.log("id", id);
+          console.log("databaseUser", message.user);
+
+          const itemMessage = document.createElement("li");
+
+          if (message.user === id) {
+            itemMessage.style.justifyContent = "start";
+            const itemUser = document.createElement("li");
+            const timeRow = document.createElement("li");
+            timeRow.classList = "rightTime";
+            timeRow.textContent = message.time + "show";
+            itemUser.classList = "rightUserother";
+            itemUser.textContent = message.user;
+            itemMessage.classList = "rightMessage";
+            itemMessage.textContent = message.message;
+            messages.appendChild(itemUser);
+            messages.appendChild(itemMessage);
+            messages.appendChild(timeRow);
+          } else {
+            itemMessage.style.justifyContent = "end";
+            const itemUser = document.createElement("li");
+            const timeRow = document.createElement("li");
+            timeRow.classList = "leftTime";
+            timeRow.textContent = message.time;
+            itemUser.classList = "leftUserClass";
+            itemUser.textContent = message.user;
+            itemMessage.classList = "leftMessage";
+            itemMessage.textContent = message.message;
+            messages.appendChild(itemUser);
+            messages.appendChild(itemMessage);
+            messages.appendChild(timeRow);
+          }
+          scrollToBottom();
+        });
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          const userObj = {
+            message: input.value,
+          };
+
+          socket.emit("chat message", userObj);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat message", async (dbMessages, userid) => {
+        const itemMessage = document.createElement("li");
+
+        itemMessage.classList = "parent_li";
+
+        if (!dbMessages[dbMessages.length - 1].user === userid) {
+          const itemUser = document.createElement("li");
+          const timeRow = document.createElement("li");
+          timeRow.classList = "leftTime";
+          timeRow.textContent =
+            dbMessages[dbMessages.length - 1].time + "  show";
+          itemUser.classList = "leftUserClass";
+          itemUser.textContent = dbMessages[dbMessages.length - 1].user;
+          itemMessage.classList = "leftMessage";
+          itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
+          messages.appendChild(itemUser);
+          messages.appendChild(itemMessage);
+          messages.appendChild(timeRow);
+          scrollToBottom();
+          window.scrollTo(0, document.body.scrollHeight);
+        } else {
+          const itemUser = document.createElement("li");
+          const timeRow = document.createElement("li");
+          timeRow.classList = "rightTime";
+          timeRow.textContent = dbMessages[dbMessages.length - 1].time;
+          itemUser.classList = "rightUserother";
+          itemUser.textContent = dbMessages[dbMessages.length - 1].user;
+          itemMessage.classList = "rightMessage";
+          itemMessage.textContent = dbMessages[dbMessages.length - 1].message;
+          messages.appendChild(itemUser);
+          messages.appendChild(itemMessage);
+          messages.appendChild(timeRow);
+          scrollToBottom();
+          window.scrollTo(0, document.body.scrollHeight);
+        }
+      });
+
+      // socket.on("disconnect",(user,dbAll)=>{
+      //   dbAll.map((message)=>{
+      //     if(user===userObjRoot.user){
+
+      //   }
+      //   })
+
+      // })
+    </script>
+  </body>
 </html>

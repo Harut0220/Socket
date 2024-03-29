@@ -1,6 +1,5 @@
-const dat=document.getElementById("div")
-const span=document.createElement("span")
+const dat = document.getElementById("div");
+const span = document.createElement("span");
 
-span.textContent="aaaaaa"
-dat.appendChild(span)
-
+span.textContent = "aaaaaa";
+dat.appendChild(span);

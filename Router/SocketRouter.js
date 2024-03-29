@@ -1,9 +1,9 @@
-import express from "express"
+import express from "express";
 
-const viewsRouter=express.Router()
+const viewsRouter = express.Router();
 
+viewsRouter.get("/", (req, res) => {
+  res.render("Views");
+});
 
-viewsRouter.get("/",(req,res)=>{res.render("Views")})
-
-
-export default viewsRouter
+export default viewsRouter;
