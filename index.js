@@ -1,24 +1,16 @@
 import express from "express";
-import { createServer } from "node:http";
 import { Server } from "socket.io";
 import http from "http";
-import connection from "./Utils/Connection.js";
-import MessageModel from "./Model/MessageModel.js";
-import { config, configDotenv } from "dotenv";
+import { config } from "dotenv";
 import cors from "cors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import viewsRouter from "./Router/SocketRouter.js";
 
-
-
-
-
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-config()
+config();
 app.use(cors());
 app.set("view engine", "ejs");
 
@@ -33,30 +25,31 @@ app.use((req, res, next) => {
   next(); // Call next middleware
 });
 
-io.on('connection', socket => {
-  console.log('A user connected');
+io.on("connection", (socket) => {
+  console.log("A user connected");
 
-  socket.on('joinRoom', room => {
+  socket.on("joinRoom", (room) => {
     socket.join(room);
   });
 
-  socket.on('offer', (offer, targetSocketId) => {
-    io.to(targetSocketId).emit('offer', offer, socket.id);
+  socket.on("offer", (offer, targetSocketId) => {
+    io.to(targetSocketId).emit("offer", offer, socket.id);
   });
 
-  socket.on('answer', (answer, senderSocketId) => {
-    io.to(senderSocketId).emit('answer', answer);
+  socket.on("answer", (answer, senderSocketId) => {
+    io.to(senderSocketId).emit("answer", answer);
   });
 
-  socket.on('icecandidate', (candidate, targetSocketId) => {
-    io.to(targetSocketId).emit('icecandidate', candidate);
+  socket.on("icecandidate", (candidate, targetSocketId) => {
+    io.to(targetSocketId).emit("icecandidate", candidate);
   });
 
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
+  socket.on("disconnect", () => {
+    console.log("A user disconnected");
   });
 });
 
 server.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
+

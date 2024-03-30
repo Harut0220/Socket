@@ -2,7 +2,7 @@ import express from "express";
 
 const viewsRouter = express.Router();
 
-viewsRouter.get("/", (req, res) => {
+viewsRouter.get("/video", (req, res) => {
   res.render("Views");
 });
 
