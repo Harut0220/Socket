@@ -52,18 +52,7 @@
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     // getUserMedia is supported
     // You can proceed with your code here
-    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-  .then(function(stream) {
-    // Do something with the stream, like displaying it in a video element
-    // var videoElement = document.createElement('video');
-    localVideo.srcObject = stream;
-    localVideo.autoplay = true;
-    document.body.appendChild(localVideo);
-  })
-  .catch(function(error) {
-    console.error('Error accessing media devices:', error);
-  });
-
+    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 } else {
     // getUserMedia is not supported
     console.error('getUserMedia is not supported in this browser');
@@ -74,7 +63,7 @@ const peerConnection = new RTCPeerConnection();
 
 // Add the local stream to the peer connection
 
-// localVideo.srcObject = localStream;
+localVideo.srcObject = localStream;
 
 // Create an offer
 const offer = await peerConnection.createOffer();
