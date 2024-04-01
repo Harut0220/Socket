@@ -20,6 +20,8 @@
     <button onclick="endCall()">End Call</button>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+
     <script>
       const socket = io();
       let localStream;
@@ -60,9 +62,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 const peerConnection = new RTCPeerConnection();
 
 // Add the local stream to the peer connection
-localStream.getTracks().forEach(track => {
-    peerConnection.addTrack(track, localStream);
-});
+
 localVideo.srcObject = localStream;
 
 // Create an offer
