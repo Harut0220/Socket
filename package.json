@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "watch": "nodemon server.js",
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -14,12 +15,14 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
-    "express": "^4.19.1",
+    "express": "^4.19.2",
     "jsdom": "^24.0.0",
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.3",
+    "peer": "^1.0.2",
     "socket.io": "^4.7.5",
-    "start": "^5.1.0"
+    "start": "^5.1.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
