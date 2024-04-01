@@ -44,13 +44,16 @@
           alert("Please enter a target socket ID");
           return;
         }
-        console.log(await navigator.mediaDevices);
-        localStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // getUserMedia is supported
+     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         console.log("localStream ===> ", localStream);
         localVideo.srcObject = localStream;
+} else {
+    console.error('getUserMedia is not supported');
+}
+
+        
 
         const offer = await localStream.createOffer();
         await localStream.setLocalDescription(offer);
