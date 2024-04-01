@@ -7,4 +7,3 @@ viewsRouter.get("/video", (req, res) => {
 });
 
 export default viewsRouter;
-
