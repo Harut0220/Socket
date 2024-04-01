@@ -47,7 +47,16 @@
       // Assume localStream is a MediaStream object obtained from getUserMedia
 
 // Create an RTCPeerConnection object
-localStream= await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // getUserMedia is supported
+    // You can proceed with your code here
+    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+} else {
+    // getUserMedia is not supported
+    console.error('getUserMedia is not supported in this browser');
+    // You might want to provide a fallback or alternative method here
+}
+
 const peerConnection = new RTCPeerConnection();
 
 // Add the local stream to the peer connection
