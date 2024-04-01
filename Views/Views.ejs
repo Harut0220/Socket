@@ -44,7 +44,7 @@
           alert("Please enter a target socket ID");
           return;
         }
-
+        console.log(await navigator.mediaDevices);
         localStream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
