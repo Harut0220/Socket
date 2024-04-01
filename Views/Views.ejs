@@ -55,7 +55,7 @@
 
         
 
-        const offer = await localStream.createOffer();
+        const offer = await createOffer();
         await localStream.setLocalDescription(offer);
 
         socket.emit("offer", offer, targetSocketId);
