@@ -44,19 +44,24 @@
           alert("Please enter a target socket ID");
           return;
         }
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    // getUserMedia is supported
-     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        console.log("localStream ===> ", localStream);
-        localVideo.srcObject = localStream;
-} else {
-    console.error('getUserMedia is not supported');
-}
+      // Assume localStream is a MediaStream object obtained from getUserMedia
 
-        
+// Create an RTCPeerConnection object
+localStream= await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+const peerConnection = new RTCPeerConnection();
 
-        const offer = await createOffer();
-        await localStream.setLocalDescription(offer);
+// Add the local stream to the peer connection
+localStream.getTracks().forEach(track => {
+    peerConnection.addTrack(track, localStream);
+});
+localVideo.srcObject = localStream;
+
+// Create an offer
+const offer = await peerConnection.createOffer();
+await peerConnection.setLocalDescription(offer);
+
+// Now you can use the offer for signaling, for example, sending it to the remote peer
+
 
         socket.emit("offer", offer, targetSocketId);
       }
