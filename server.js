@@ -5,7 +5,6 @@ import { config } from "dotenv";
 import cors from "cors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-// import viewsRouter from "./Router/SocketRouter.js";
 import { v4 as uuidV4 } from "uuid";
 
 const app = express();
@@ -14,51 +13,130 @@ export const io = new Server(server);
 config();
 app.use(cors());
 
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.set("view engine", "ejs");
-// app.set("views", path.join(__dirname, "Login"));
+app.use(express.static("public"));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.get("/", (req, res) => {
+  res.render(`LoginPage`, { roomId: req.params.room });
+});
+
+app.post(`/:room`, (req, res) => {
  
-app.use(express.static(path.join(__dirname, 'public')));
-// app.get("/", (req, res) => {
-//     res.redirect(`/`)
-//   //   ${uuidV4()}`);
-//   });
-// Handle form submissions
-app.post('/:room', (req, res) => {
-  // Process form data (not shown here)
-  // For example, you can access form data using req.body
-
-  // Send a response with an HTML file
-  res.sendFile(path.join(__dirname, 'Front', 'Views.html'));
+ 
+  res.sendFile(path.join(__dirname, "Front", "Views.html"));
 });
 
-// If they join the base link, generate a random UUID and send them to a new room with said UUID
 
-// If they join a specific room, then render that room
-app.get("/:room", (req, res) => {
-  res.render("LoginPage")
-//    { roomId: req.params.room });
-});
+let rooms = {};
 
-// app.get("/", (req, res) => res.render("Views"))
-// When someone connects to the server
-io.on("connection", (socket) => {
-  // When someone attempts to join the room
-  socket.on("join-room", (roomId, userId) => {
-    socket.join(roomId); // Join the room
-    socket.broadcast.emit("user-connected", userId); // Tell everyone else in the room that we joined
+io.on('connection', socket => {
+    console.log(`User connected ${socket.id}`);
 
-    // Communicate the disconnection
-    socket.on("disconnect", () => {
-      socket.broadcast.emit("user-disconnected", userId);
+    socket.on('create-room', (roomId) => {
+        // Logic to create a new room
+        if(!rooms[roomId]) {
+            rooms[roomId] = {
+                members: [socket.id],
+            };
+            // socket.join(roomId);
+            socket.emit('room-created', roomId);
+            console.log(`Room created: ${roomId}`);
+
+        } else {
+            // Room already exists
+            socket.emit('room-exists');
+        }
     });
-  });
+    
+    socket.on('join-room', (roomId) => {
+        // Logic to handle joining an existing room
+        const room = rooms[roomId];
+
+        if (room && room.members.length == 1) {
+            // room.members.push(socket.id);
+            // socket.join(roomId);
+            console.log("Sending join request to room owner", socket.id);
+            io.to(room.members[0]).emit('join-request', socket.id);
+        } else {
+            // Room is full or does not exist
+            socket.emit('room-unavailable');
+        }
+    });
+
+    socket.on('approve-join-request', (roomId, requesterUserId) => {
+        console.log(roomId, requesterUserId);
+        const room = rooms[roomId];
+    
+        if (room) {
+            if(room.members[0]==socket.id) {
+                room.members.push(requesterUserId);
+                // socket.join(roomId);
+                io.to(requesterUserId).emit('join-approved');
+                console.log(`User ${requesterUserId} approved to join room ${roomId}`);
+                io.to(requesterUserId).emit('start-peer-connection', socket.id);
+            }
+        }
+    });
+    
+    socket.on('offer-request', data => {
+        const { fromOffer, to } = data;
+        console.log("Forwarding offer request to: "+ to);
+        socket.to(to).emit('offer-request', { from: socket.id, offer: fromOffer });
+    });
+
+    socket.on('offer-answer', data => {
+        const { answere, to } = data;
+        console.log("Forwarding offer answer to: "+ to);
+        socket.to(to).emit('offer-answer', { from: socket.id, offer: answere });
+    });
+
+    socket.on('peer-updated', data => {
+        const { candidate, to } = data;
+        console.log("Peer updated");
+        socket.to(to).emit('peer-updated', { from: socket.id, candidate: candidate });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected:', socket.id);
+        // Handle user disconnection, leave rooms, etc.
+      });
 });
 
-// app.set("views", path.join(__dirname, "Views"));
-// app.use(express.static(path.join(__dirname, "Public")));
-// app.use("/call", viewsRouter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// io.on("connection", (socket) => {
+//   // When someone attempts to join the room
+//   socket.on("join-room", (roomId, userId) => {
+//     socket.join(roomId); // Join the room
+//     socket.broadcast.emit("user-connected", userId); // Tell everyone else in the room that we joined
+
+//     // Communicate the disconnection
+//     socket.on("disconnect", () => {
+//       socket.broadcast.emit("user-disconnected", userId);
+//     });
+//   });
+// });
 
 server.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
