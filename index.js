@@ -6,6 +6,10 @@ import cors from "cors";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { v4 as uuidV4 } from "uuid";
+// import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+// import { OAuth2Client } from 'google-auth-library';
+
+
 
 const app = express();
 const server = http.createServer(app);
@@ -16,6 +20,15 @@ app.use(cors());
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+
+
+
+
+
+
+
+
 
 app.get("/", (req, res) => {
   res.render(`LoginPage`, { roomId: req.params.room });
