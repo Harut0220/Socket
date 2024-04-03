@@ -77,9 +77,23 @@
         font-size: 20px;
         left: 30px;
       }
+      .text-white{
+        border: none;
+      }
+      .bg-cover{
+        display: flex;
+        flex-wrap: wrap;
+        border: none;
+      }
+      .reject_icon{
+        width: 300px;
+        height: 100px;
+        background-color: red;
+
+      }
     </style>
   </head>
-  <body
+  <body id="add_reject"
     style="
       background-image: url('https://wallpapers.com/images/hd/abstract-background-6m6cjbifu3zpfv84.jpg');
     "
@@ -140,7 +154,7 @@
       const remoteVideo = document.getElementById("remote-video");
       const joinRequestsContainer = document.getElementById("join-requests");
       const tableElement = document.getElementById("incoming-calls");
-
+     
       let peer;
       let roomId;
       let isRoomCreator = false;
@@ -149,7 +163,7 @@
 
       function populateIncomingCalls() {
         const defaultTableHeader = `<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-    <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+    <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-cover dark:text-white dark:bg-cover-800">
        
     </caption>
     <!-- <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -164,15 +178,15 @@
         let tableContent = ``;
         for (var idx = 0; idx <= incomingCalls.length - 1; idx++) {
           let callerId = incomingCalls[idx];
-          tableContent += `<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          tableContent += `<tr class="bg-cover border-b dark:bg-cover-800 dark:border-gray-700">
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-wrap dark:text-white">
             ${callerId}
         </th>
         <td class="px-4 py-4">
             <button type="button" onclick="approveJoinRequest('${callerId}')" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Accept</button>
         </td>
         <td class="px-4 py-4">
-            <button type="button" onclick="rejectJoinRequest('${callerId}')" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reject</button>
+            <button type="button" onclick="rejectJoinRequest('${callerId}')" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900:border-none" >Reject</button>
         </td>
     </tr>`;
         }
@@ -245,15 +259,20 @@
       function displayJoinRequest(requesterUserId) {
         incomingCalls.push(requesterUserId);
         populateIncomingCalls();
-        // const joinRequestElement = document.createElement('div');
-        // joinRequestElement.classList.add('join-request');
-        // joinRequestElement.innerHTML = `<p>User ${requesterUserId} wants to join the room.</p>
-        //                                 <button onclick="approveJoinRequest('${requesterUserId}')">Approve</button>
-        //                                 <button onclick="rejectJoinRequest('${requesterUserId}')">Reject</button>`;
-        // joinRequestsContainer.appendChild(joinRequestElement);
+        const joinRequestElement = document.createElement('div');
+        joinRequestElement.classList.add('join-request');
+        joinRequestElement.innerHTML = `<p>User ${requesterUserId} wants to join the room.</p>
+                                        <button onclick="approveJoinRequest('${requesterUserId}')">Approve</button>
+                                        <button onclick="rejectJoinRequest('${requesterUserId}')">Reject</button>`;
+        joinRequestsContainer.appendChild(joinRequestElement);
       }
 
       function approveJoinRequest(requesterUserId) {
+        // const incoming_calls=document.getElementsById("add_reject")
+        // const reject_button=document.createElement("button")
+        // reject_button.className="reject_icon"
+        // incoming_calls.appendChild(reject_button)
+        // incoming_calls.innerHTML=`<button type="button" onclick="rejectJoinRequest('${callerId}')" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900:border-none" >Reject</button>`
         console.log(requesterUserId);
         // Emit an event to the server to approve the join request
         socket.emit("approve-join-request", roomId, requesterUserId);
@@ -261,6 +280,7 @@
         incomingCalls = incomingCalls.filter(function (item) {
           return item !== requesterUserId;
         });
+
         populateIncomingCalls();
       }
 
