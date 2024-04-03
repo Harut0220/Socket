@@ -15,9 +15,11 @@ export const io = new Server(server);
 config();
 app.use(cors());
 
-app.set("view engine", "ejs");
-app.use(express.static("public"));
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "Views"));
+app.use(express.static(path.join(__dirname, "Public")));
 
 app.get("/", (req, res) => {
   res.render(`LoginPage`, { roomId: req.params.room });
