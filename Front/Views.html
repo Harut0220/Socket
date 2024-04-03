@@ -1,132 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Peer-to-Peer Video Call</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- <link rel="stylesheet" href="styles.css"> -->
-        <style>
-            body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peer-to-Peer Video Call</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-#room-selection,
-#join-room {
-    margin: 20px 0;
-}
+      #room-selection,
+      #join-room {
+        margin: 20px 0;
+      }
 
-#local-video-container,
-#remote-video-container {
-    margin: 20px 0;
-}
+      #local-video-container,
+      #remote-video-container {
+        margin: 20px 0;
+      }
 
-video {
-    max-width: 100%;
-}
+      video {
+        max-width: 100%;
+      }
 
-#join-requests {
-    margin-bottom: 20px;
-}
+      #join-requests {
+        margin-bottom: 20px;
+      }
 
-.join-request {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
+      .join-request {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
 
-.join-request button {
-    margin-left: 10px;
-}
+      .join-request button {
+        margin-left: 10px;
+      }
 
-button {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: 1px solid;
-    cursor: pointer;
-    display: block;
-    margin-top: 10px;
-}
+      button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px solid;
+        cursor: pointer;
+        display: block;
+        margin-top: 10px;
+      }
 
-#local-video {
-    position: absolute;
-    /* border: 2px solid green; */
-    height: 250px;
-    width: 250px;
-    top: 200px;
-    right: 20px
-}
+      #local-video {
+        position: absolute;
+        /* border: 2px solid green; */
+        height: 250px;
+        width: 250px;
+        top: 200px;
+        right: 20px;
+      }
 
-#remote-video {
-    position: absolute;
-    /* border: 2px solid blue; */
-    height: 550px;
-    width: 550px;
-    top: 200px;
-    right: 300px
-}
+      #remote-video {
+        position: absolute;
+        /* border: 2px solid blue; */
+        height: 550px;
+        width: 550px;
+        top: 200px;
+        right: 300px;
+      }
 
-#status {
-    position: absolute;
-    bottom: 30px;
-    font-size: 20px;
-    left: 30px;
-}
+      #status {
+        position: absolute;
+        bottom: 30px;
+        font-size: 20px;
+        left: 30px;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      background-image: url('https://wallpapers.com/images/hd/abstract-background-6m6cjbifu3zpfv84.jpg');
+    "
+  >
+    <br />
+    <div class="grid grid-cols-3 gap-4">
+      <div class="mb-6" style="width: 300px">
+        <input
+          type="text"
+          id="create-room-id"
+          placeholder="Enter room id"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <br />
+        <button
+          onclick="createRoom()"
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Create new room
+        </button>
+      </div>
 
-        </style>
-    </head>
-    <body style="background-image: url('https://wallpapers.com/images/hd/abstract-background-6m6cjbifu3zpfv84.jpg');">
+      <div class="mb-6">
+        <input
+          type="text"
+          id="join-room-id"
+          placeholder="Enter room id"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <br />
+        <button
+          onclick="joinRoom()"
+          type="submit"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Join existing room
+        </button>
+      </div>
 
-        
-          <br>
-        <div class="grid grid-cols-3 gap-4">
-            <div class="mb-6" style="width: 300px;">
-                <input type="text" id="create-room-id" placeholder="Enter room id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <br>
-                <button onclick="createRoom()" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create new room</button>
-            </div>
+      <div class="relative overflow-x-auto" id="incoming-calls"></div>
+    </div>
 
-            <div class="mb-6">
-                <input type="text" id="join-room-id" placeholder="Enter room id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <br>
-                <button onclick="joinRoom()" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Join existing room</button>
-            </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div id="local-video-container">
+        <video id="local-video" autoplay muted></video>
+      </div>
 
-            <div class="relative overflow-x-auto" id="incoming-calls">
-            </div>
-        </div>
+      <div id="remote-video-container">
+        <video id="remote-video" autoplay></video>
+      </div>
+    </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div id="local-video-container">
-                <video id="local-video" autoplay muted></video>
-            </div>
-        
-            <div id="remote-video-container">
-                <video id="remote-video" autoplay></video>
-            </div>
-        </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const localVideo = document.getElementById("local-video");
+      const remoteVideo = document.getElementById("remote-video");
+      const joinRequestsContainer = document.getElementById("join-requests");
+      const tableElement = document.getElementById("incoming-calls");
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script >
-          const socket = io();
-const localVideo = document.getElementById('local-video');
-const remoteVideo = document.getElementById('remote-video');
-const joinRequestsContainer = document.getElementById('join-requests');
-const tableElement = document.getElementById("incoming-calls");
+      let peer;
+      let roomId;
+      let isRoomCreator = false;
+      let remoteSocketId = null;
+      let incomingCalls = [];
 
-let peer;
-let roomId;
-let isRoomCreator = false;
-let remoteSocketId = null;
-let incomingCalls = [];
-
-function populateIncomingCalls() {
-    const defaultTableHeader = `<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      function populateIncomingCalls() {
+        const defaultTableHeader = `<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
     <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
        
     </caption>
@@ -137,12 +159,12 @@ function populateIncomingCalls() {
             <th scope="row" class="px-6 py-4"></th></th>
         </tr>
     </thead> -->
-    <tbody>`
+    <tbody>`;
 
-    let tableContent = ``
-    for (var idx = 0; idx <= incomingCalls.length - 1; idx++) {
-        let callerId = incomingCalls[idx];
-        tableContent += `<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        let tableContent = ``;
+        for (var idx = 0; idx <= incomingCalls.length - 1; idx++) {
+          let callerId = incomingCalls[idx];
+          tableContent += `<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
             ${callerId}
         </th>
@@ -152,179 +174,184 @@ function populateIncomingCalls() {
         <td class="px-4 py-4">
             <button type="button" onclick="rejectJoinRequest('${callerId}')" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reject</button>
         </td>
-    </tr>`
-    }
-
-    const defaultTableFooter = `</tbody>
-    </table>`
-
-
-    tableElement.innerHTML = defaultTableHeader + tableContent + defaultTableFooter;
-}
-
-populateIncomingCalls();
-
-peer = new RTCPeerConnection({
-    iceServers: [
-        {
-            urls: "stun:stun.l.google.com:19302"
+    </tr>`;
         }
-    ]
-});
 
-peer.onicecandidate = (event) => {
-    console.log("Found ice candidate" + event.candidate);
-    if (event.candidate && remoteSocketId) {
-    socket.emit('peer-updated', {
-        candidate: event.candidate,
-        to: remoteSocketId
-    });
-    }
-};
+        const defaultTableFooter = `</tbody>
+    </table>`;
 
-peer.ontrack = (event) => {
-    // Don't set srcObject again if it is already set.
-    if (remoteVideo.srcObject) return;
-    remoteVideo.srcObject = event.streams[0];
-};
+        tableElement.innerHTML =
+          defaultTableHeader + tableContent + defaultTableFooter;
+      }
 
-const startVideoStream = async() => {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localVideo.srcObject = stream;
+      populateIncomingCalls();
 
-        // Add the local stream to the connection
-        stream.getTracks().forEach((track) => peer.addTrack(track, stream));
+      peer = new RTCPeerConnection({
+        iceServers: [
+          {
+            urls: "stun:stun.l.google.com:19302",
+          },
+        ],
+      });
 
-        // TODO: Implement signaling to exchange SDP offer/answer and ICE candidates
-    } catch (error) {
-        console.error('Error Streaming video:', error);
-    }
-}
+      peer.onicecandidate = (event) => {
+        console.log("Found ice candidate" + event.candidate);
+        if (event.candidate && remoteSocketId) {
+          socket.emit("peer-updated", {
+            candidate: event.candidate,
+            to: remoteSocketId,
+          });
+        }
+      };
 
-function createRoom() {
-    roomId = document.getElementById('create-room-id').value;
-    isRoomCreator = true;
+      peer.ontrack = (event) => {
+        // Don't set srcObject again if it is already set.
+        if (remoteVideo.srcObject) return;
+        remoteVideo.srcObject = event.streams[0];
+      };
 
-    // Emit an event to the server to create a room
-    socket.emit('create-room', roomId);
-}
+      const startVideoStream = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+          });
+          localVideo.srcObject = stream;
 
-function joinRoom() {
-    roomId = document.getElementById('join-room-id').value;
+          // Add the local stream to the connection
+          stream.getTracks().forEach((track) => peer.addTrack(track, stream));
 
-    // Emit an event to the server to join a room
-    socket.emit('join-room', roomId);
-}
+          // TODO: Implement signaling to exchange SDP offer/answer and ICE candidates
+        } catch (error) {
+          console.error("Error Streaming video:", error);
+        }
+      };
 
-function displayJoinRequest(requesterUserId) {
-    incomingCalls.push(requesterUserId);
-    populateIncomingCalls();
-    // const joinRequestElement = document.createElement('div');
-    // joinRequestElement.classList.add('join-request');
-    // joinRequestElement.innerHTML = `<p>User ${requesterUserId} wants to join the room.</p>
-    //                                 <button onclick="approveJoinRequest('${requesterUserId}')">Approve</button>
-    //                                 <button onclick="rejectJoinRequest('${requesterUserId}')">Reject</button>`;
-    // joinRequestsContainer.appendChild(joinRequestElement);
-}
+      function createRoom() {
+        roomId = document.getElementById("create-room-id").value;
+        isRoomCreator = true;
 
-function approveJoinRequest(requesterUserId) {
-    console.log(requesterUserId);
-    // Emit an event to the server to approve the join request
-    socket.emit('approve-join-request', roomId, requesterUserId);
-    // joinRequestsContainer.innerHTML = '';
-    incomingCalls = incomingCalls.filter(function(item) {
-        return item !== requesterUserId
-    });
-    populateIncomingCalls();
-}
+        // Emit an event to the server to create a room
+        socket.emit("create-room", roomId);
+      }
 
-function rejectJoinRequest(requesterUserId) {
-    // Implement rejection logic if needed
-    // joinRequestsContainer.innerHTML = '';
-    incomingCalls = incomingCalls.filter(function(item) {
-        return item !== requesterUserId
-    });
-    populateIncomingCalls();
-}
+      function joinRoom() {
+        roomId = document.getElementById("join-room-id").value;
 
-// Event listeners for server events
-socket.on('peer-updated', async data => {
-    const {from, candidate} = data;
-    peer.addIceCandidate(new RTCIceCandidate(candidate))
-    .catch((error) => {
-        console.error('Error adding ICE candidate:', error);
-    });
-    console.log("Added new ice candidate");
-});
+        // Emit an event to the server to join a room
+        socket.emit("join-room", roomId);
+      }
 
-socket.on('join-request', (requesterUserId) => {
-    console.log("Join Request came", requesterUserId);
-    displayJoinRequest(requesterUserId);
-});
+      function displayJoinRequest(requesterUserId) {
+        incomingCalls.push(requesterUserId);
+        populateIncomingCalls();
+        // const joinRequestElement = document.createElement('div');
+        // joinRequestElement.classList.add('join-request');
+        // joinRequestElement.innerHTML = `<p>User ${requesterUserId} wants to join the room.</p>
+        //                                 <button onclick="approveJoinRequest('${requesterUserId}')">Approve</button>
+        //                                 <button onclick="rejectJoinRequest('${requesterUserId}')">Reject</button>`;
+        // joinRequestsContainer.appendChild(joinRequestElement);
+      }
 
-socket.on('join-approved', () => {
-    console.log("Received approval to join room");
-});
+      function approveJoinRequest(requesterUserId) {
+        console.log(requesterUserId);
+        // Emit an event to the server to approve the join request
+        socket.emit("approve-join-request", roomId, requesterUserId);
+        // joinRequestsContainer.innerHTML = '';
+        incomingCalls = incomingCalls.filter(function (item) {
+          return item !== requesterUserId;
+        });
+        populateIncomingCalls();
+      }
 
-socket.on('room-created', (roomId) => {
-    roomId = roomId;
-});
+      function rejectJoinRequest(requesterUserId) {
+        // Implement rejection logic if needed
+        // joinRequestsContainer.innerHTML = '';
+        incomingCalls = incomingCalls.filter(function (item) {
+          return item !== requesterUserId;
+        });
+        populateIncomingCalls();
+      }
 
-socket.on('room-exists', () => {
-    alert("Room already exists");
-});
+      // Event listeners for server events
+      socket.on("peer-updated", async (data) => {
+        const { from, candidate } = data;
+        peer.addIceCandidate(new RTCIceCandidate(candidate)).catch((error) => {
+          console.error("Error adding ICE candidate:", error);
+        });
+        console.log("Added new ice candidate");
+      });
 
-socket.on('room-unavailable', () => {
-    alert("Room not available");
-});
+      socket.on("join-request", (requesterUserId) => {
+        console.log("Join Request came", requesterUserId);
+        displayJoinRequest(requesterUserId);
+      });
 
-socket.on('start-peer-connection', (to) => {
-    initializePeerConnection(to);
-});
+      socket.on("join-approved", () => {
+        console.log("Received approval to join room");
+      });
 
-socket.on('offer-request', async data => {
-    const { from, offer } = data;
-    console.log("Incoming offer for webRTC from:" + from);
-    await peer.setRemoteDescription(new RTCSessionDescription(offer));
-    console.log("Set Remote Description:" + offer);
+      socket.on("room-created", (roomId) => {
+        roomId = roomId;
+      });
 
-    const answereOffer = await peer.createAnswer();
-    console.log("Created answer offer:" + answereOffer);
-    await peer.setLocalDescription(new RTCSessionDescription(answereOffer));
-    console.log("Set Local Description:" + answereOffer);
+      socket.on("room-exists", () => {
+        alert("Room already exists");
+      });
 
-    socket.emit('offer-answer', { answere: answereOffer, to: from });
-    remoteSocketId = from;
+      socket.on("room-unavailable", () => {
+        alert("Room not available");
+      });
 
-    const mySteam = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-    });
+      socket.on("start-peer-connection", (to) => {
+        initializePeerConnection(to);
+      });
 
-    mySteam.getTracks().forEach((track) =>
-        peer.addTrack(track, mySteam));
-});
+      socket.on("offer-request", async (data) => {
+        const { from, offer } = data;
+        console.log("Incoming offer for webRTC from:" + from);
+        await peer.setRemoteDescription(new RTCSessionDescription(offer));
+        console.log("Set Remote Description:" + offer);
 
-socket.on('offer-answer', async data => {
-    console.log("Receibed answer from peer");
-    const { offer } = data;
-    await peer.setRemoteDescription(new RTCSessionDescription(offer));
-    console.log("Set Remote description after answer received from peer: ", offer);
-});
+        const answereOffer = await peer.createAnswer();
+        console.log("Created answer offer:" + answereOffer);
+        await peer.setLocalDescription(new RTCSessionDescription(answereOffer));
+        console.log("Set Local Description:" + answereOffer);
 
-async function initializePeerConnection(remoteSocketId) {
-    console.log("Remote Socket ID: "+ remoteSocketId);
-    remoteSocketId = remoteSocketId;
-    const localOffer = await peer.createOffer();
-    console.log("Set local description for creating call: " + localOffer);
-    await peer.setLocalDescription(new RTCSessionDescription(localOffer));
-    socket.emit('offer-request', { fromOffer: localOffer, to: remoteSocketId });
-}
+        socket.emit("offer-answer", { answere: answereOffer, to: from });
+        remoteSocketId = from;
 
-window.addEventListener('load', startVideoStream);
-        </script>
-    </body>
+        const mySteam = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+
+        mySteam.getTracks().forEach((track) => peer.addTrack(track, mySteam));
+      });
+
+      socket.on("offer-answer", async (data) => {
+        console.log("Receibed answer from peer");
+        const { offer } = data;
+        await peer.setRemoteDescription(new RTCSessionDescription(offer));
+        console.log(
+          "Set Remote description after answer received from peer: ",
+          offer
+        );
+      });
+
+      async function initializePeerConnection(remoteSocketId) {
+        console.log("Remote Socket ID: " + remoteSocketId);
+        remoteSocketId = remoteSocketId;
+        const localOffer = await peer.createOffer();
+        console.log("Set local description for creating call: " + localOffer);
+        await peer.setLocalDescription(new RTCSessionDescription(localOffer));
+        socket.emit("offer-request", {
+          fromOffer: localOffer,
+          to: remoteSocketId,
+        });
+      }
+
+      window.addEventListener("load", startVideoStream);
+    </script>
+  </body>
 </html>
-
-
