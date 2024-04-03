@@ -259,12 +259,12 @@
       function displayJoinRequest(requesterUserId) {
         incomingCalls.push(requesterUserId);
         populateIncomingCalls();
-        const joinRequestElement = document.createElement('div');
-        joinRequestElement.classList.add('join-request');
-        joinRequestElement.innerHTML = `<p>User ${requesterUserId} wants to join the room.</p>
-                                        <button onclick="approveJoinRequest('${requesterUserId}')">Approve</button>
-                                        <button onclick="rejectJoinRequest('${requesterUserId}')">Reject</button>`;
-        joinRequestsContainer.appendChild(joinRequestElement);
+        // const joinRequestElement = document.createElement('div');
+        // joinRequestElement.classList.add('join-request');
+        // joinRequestElement.innerHTML = `<p>User ${requesterUserId} wants to join the room.</p>
+        //                                 <button onclick="approveJoinRequest('${requesterUserId}')">Approve</button>
+        //                                 <button onclick="rejectJoinRequest('${requesterUserId}')">Reject</button>`;
+        // joinRequestsContainer.appendChild(joinRequestElement);
       }
 
       function approveJoinRequest(requesterUserId) {

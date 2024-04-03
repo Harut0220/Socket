@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
     // Logic to handle joining an existing room
     const room = rooms[roomId];
 
-    if (room && room.members.length < 3) {
+    if (room && room.members.length == 1) {
       // room.members.push(socket.id);
       // socket.join(roomId);
       console.log("Sending join request to room owner", socket.id);
