@@ -1,138 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="path/to/font-awesome/css/font-awesome.min.css"
-    />
-    <title>Document</title>
 
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        justify-items: center;
-        align-content: center;
-        background-color: blueviolet;
-      }
+<head>
+  <meta name="google-signin-client-id" content="1072027456660-usli7tan4gv2ie4hu1tkjd46pnn0fk3h.apps.googleusercontent.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <meta name="google-signin-client_id" content="1072027456660-usli7tan4gv2ie4hu1tkjd46pnn0fk3h.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <!-- Include Font Awesome CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-      #username {
-        border: none;
-        border-radius: 15px;
-        padding-left: 10px;
-        width: 300px;
-        height: 40px;
-      }
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
-      #password {
-        border: none;
-        border-radius: 15px;
-        padding-left: 10px;
-        width: 300px;
-        height: 40px;
-      }
+  <!-- Include jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-      #form {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        justify-items: center;
-        align-content: center;
-        gap: 15px;
-      }
+  <!-- Include Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
-      button {
-        background-color: blue;
-        color: white;
-        width: 100px;
-        height: 40px;
-        border: none;
-        border-radius: 15px;
-      }
-      label {
-        font-size: 25px;
-      }
-      .fa-phone-square {
-        width: 50px;
-        height: 50px;
-        color: black;
-        font-size: 100px;
-      }
-    </style>
-  </head>
+  <!-- Include Google Sign-In Platform JS -->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-  <body>
-    <i class="fa fa-phone-square" aria-hidden="true"></i>
-    <form action="/" method="post" id="form">
-      <label for="username">Login</label>
-      Gmail<input
-        type="email"
-        id="username"
-        name="username"
-        placeholder="Gmail Address"
-        pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
-        required
-      />
-      Password<input
-        type="password"
-        id="password"
-        placeholder="Password"
-        required
-      />
-      <button type="submit">Submit</button>
-    </form>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      justify-items: center;
+      align-content: center;
+      background-color: blueviolet;
+    }
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="dist/bundle.js"></script>
+    #username {
+      border: none;
+      border-radius: 15px;
+      padding-left: 10px;
+      width: 300px;
+      height: 40px;
+    }
 
-    <script>
-      function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        var idToken = googleUser.getAuthResponse().id_token;
-        // Send the idToken to your server to authenticate the user
-      }
+    #password {
+      border: none;
+      border-radius: 15px;
+      padding-left: 10px;
+      width: 300px;
+      height: 40px;
+    }
 
-      // Function to generate a new UUID
-      function generateUUID() {
-        return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-          /[xy]/g,
-          function (c) {
-            var r = (Math.random() * 16) | 0,
-              v = c == "x" ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-          }
-        );
-      }
+    #form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      justify-items: center;
+      align-content: center;
+      gap: 15px;
+    }
 
-      // Get the form element
+    button {
+      background-color: blue;
+      color: white;
+      width: 100px;
+      height: 40px;
+      border: none;
+      border-radius: 15px;
+    }
 
-      const form = document.getElementById("form");
-      // Add event listener to the form submission
-      form.addEventListener("submit", function (event) {
-        // Get the value of the username input field
-        var username = document.getElementById("username").value;
+    label {
+      font-size: 25px;
+    }
 
-        // Check if the username matches the specified pattern
-        var pattern = /[a-zA-Z0-9._%+-]+@gmail\.com$/;
-        if (!pattern.test(username)) {
-          // If the pattern does not match, prevent form submission
-          event.preventDefault();
-          alert("Please enter a valid Gmail address.");
-        } else {
-          var newRoomId = generateUUID();
+    .fa-phone-square {
+      width: 50px;
+      height: 50px;
+      color: black;
+      font-size: 100px;
+    }
 
-          // Set the new action with the generated UUID
-          form.action = "/" + newRoomId;
+    .g-signin2 {
+     margin-top: 20px;
+    }
+    .fa-phone-square{
+      margin-top: 20px;
+      margin-bottom: 70px;
+      margin-right: -45px;
+      rotate: 90deg;
+    }
+    a{
+      display: none;
+    }
+  </style>
+</head>
 
-          // Submit the form
-          form.submit();
-        }
+<body>
+  <i class="fas fa-phone-square"></i>
+  <form action="/" method="post" id="form">
+    <label for="username">Login</label>
+    Gmail<input type="email" id="username" name="username" placeholder="Gmail Address" pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" required />
+    Password<input type="password" id="password" placeholder="Password" required />
+    <button id="butt" type="submit">Submit</button>
+  </form>
+  <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+  <a href="#" onclick="signOut();">Sign out</a>
+
+  <script>
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
       });
-    </script>
-  </body>
+    }
+
+    function onSignIn(googleUser) {
+      console.log(googleUser);
+      $(".g-signin2").css("display", "none");
+      var profile = googleUser.getBasicProfile();
+      console.log("ID: " + profile.getId());
+      console.log("full name: " + profile.getName());
+      console.log("given name: " + profile.getGivenName());
+      console.log("family name: " + profile.getFamilyName());
+      console.log("image url: " + profile.getImageUrl());
+      console.log("email: " + profile.getEmail());
+      var id_token = googleUser.getAuthResponse().id_token;
+      console.log("id token: " + id_token);
+      const form = document.getElementById("form");
+    // Add event listener to the form submission
+    form.addEventListener("submit", function (event) {
+      // Get the value of the username input field
+      var username = document.getElementById("username").value;
+
+      // Check if the username matches the specified pattern
+      var pattern = /[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!pattern.test(username)) {
+        // If the pattern does not match, prevent form submission
+        event.preventDefault();
+        alert("Please enter a valid Gmail address.");
+      } else {
+        var newRoomId = generateUUID();
+
+        // Set the new action with the generated UUID
+        form.action = "/" + newRoomId;
+        
+        // Submit the form
+        form.submit();
+      }
+    });
+      // Send the idToken to your server to authenticate the user
+      
+    }
+
+    // Function to generate a new UUID
+    function generateUUID() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+
+    // Get the form element
+    const form = document.getElementById("form");
+    // Add event listener to the form submission
+    form.addEventListener("submit", function (event) {
+      // Get the value of the username input field
+      var username = document.getElementById("username").value;
+
+      // Check if the username matches the specified pattern
+      var pattern = /[a-zA-Z0-9._%+-]+@gmail\.com$/;
+      if (!pattern.test(username)) {
+        // If the pattern does not match, prevent form submission
+        event.preventDefault();
+        alert("Please enter a valid Gmail address.");
+      } else {
+        var newRoomId = generateUUID();
+
+        // Set the new action with the generated UUID
+        form.action = "/" + newRoomId;
+
+        // Submit the form
+        form.submit();
+      }
+    });
+  </script>
+</body>
+
 </html>

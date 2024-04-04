@@ -53,15 +53,16 @@ io.on("connection", (socket) => {
     // Logic to handle joining an existing room
     const room = rooms[roomId];
 
-    if (room && room.members.length == 1) {
-      // room.members.push(socket.id);
-      // socket.join(roomId);
+    if (room && room.members.length < 4) {
+      room.members.push(socket.id);
+      socket.join(roomId);
       console.log("Sending join request to room owner", socket.id);
       io.to(room.members[0]).emit("join-request", socket.id);
-    } else {
-      // Room is full or does not exist
-      socket.emit("room-unavailable");
-    }
+    } 
+    // else {
+    //   // Room is full or does not exist
+    //   socket.emit("room-unavailable",socket.id);
+    // }
   });
 
   socket.on("approve-join-request", (roomId, requesterUserId) => {
