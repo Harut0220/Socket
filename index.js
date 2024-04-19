@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { v4 as uuidV4 } from "uuid";
 // import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 // import { OAuth2Client } from 'google-auth-library';
+import SignRouter from "./SignRouter/SignRouter.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -28,6 +29,8 @@ app.get("/", (req, res) => {
 app.post(`/:room`, (req, res) => {
   res.sendFile(path.join(__dirname, "Front", "Views.html"));
 });
+
+// app.use("/api",SignRouter)
 
 let rooms = {};
 
